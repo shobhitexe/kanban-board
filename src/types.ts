@@ -1,3 +1,5 @@
-export type IDType = { id: string | number };
+export type IDType = string | number;
 
-export type ColumnsType = { id: IDType | number; title: string };
+export type ColumnsType = { id: IDType; title: string };
+
+export type TaskType = { id: IDType; columnId: IDType; content: string };
