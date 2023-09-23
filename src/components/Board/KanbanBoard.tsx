@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { ColumnsType, IDType, TaskType } from "../types";
+import { ColumnsType, IDType, TaskType } from "../../types";
 import PlusIcon from "@/icons/PlusIcon";
 import ColumnContainer from "./ColumnContainer";
 import {
@@ -17,6 +17,12 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+import { generateID } from "@/utils/generateID";
+import {
+  createNewColumn,
+  deleteColumnFromDB,
+  fetchColumns,
+} from "@/lib/columnoperations";
 
 export default function KanbanBoard() {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -31,16 +37,15 @@ export default function KanbanBoard() {
 
   useEffect(() => setMounted(true), []);
 
-  function createNewColumn() {
-    const columnsToAdd: ColumnsType = {
-      id: generateID(),
-      title: `Column ${columns.length + 1}`,
-    };
+  useEffect(() => {
+    fetchColumns(setColumns);
+  }, []);
 
-    setColumns([...columns, columnsToAdd]);
-  }
+  async function deleteColumn(id: IDType) {
+    const response = await deleteColumnFromDB(id);
 
-  function deleteColumn(id: IDType) {
+    if (!response) return;
+
     const filteredColumns = columns.filter((col) => col.id !== id);
     setColumns(filteredColumns);
 
@@ -55,10 +60,6 @@ export default function KanbanBoard() {
     });
 
     setColumns(newColumns);
-  }
-
-  function generateID() {
-    return Math.floor(Math.random() * 10001);
   }
 
   function onDragStart(event: DragStartEvent) {
@@ -183,7 +184,7 @@ export default function KanbanBoard() {
             <SortableContext items={columnsId}>
               {columns.map((column) => (
                 <ColumnContainer
-                  key={`${column.id}`}
+                  key={column.id}
                   column={column}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
@@ -196,7 +197,7 @@ export default function KanbanBoard() {
             </SortableContext>
           </div>
           <button
-            onClick={() => createNewColumn()}
+            onClick={() => createNewColumn(columns, setColumns)}
             className="h-[60px] w-[350px] min-w-[350px] items-center cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2 flex gap-2"
           >
             <PlusIcon width={20} height={20} />
