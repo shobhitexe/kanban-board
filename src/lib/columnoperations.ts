@@ -1,15 +1,11 @@
-import { ColumnsType, TaskType } from "@/types";
-import { Dispatch } from "react";
-import { IDType } from "@/types";
+import { Dispatch, SetStateAction } from "react";
+import { ColumnsType, IDType } from "../types";
 
 export async function fetchColumns(
-  setColumns: Dispatch<React.SetStateAction<ColumnsType[]>>
+  setColumns: Dispatch<SetStateAction<ColumnsType[]>>
 ) {
-  const response = await fetch("/api/getcolumns", {
+  const response = await fetch("/api/column/getcolumns", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
   const columnsArray = await response.json();
 
@@ -18,9 +14,9 @@ export async function fetchColumns(
 
 export async function createNewColumn(
   columns: ColumnsType[],
-  setColumns: Dispatch<React.SetStateAction<ColumnsType[]>>
+  setColumns: Dispatch<SetStateAction<ColumnsType[]>>
 ) {
-  const response = await fetch("/api/createcolumn", {
+  const response = await fetch("/api/column/createcolumn", {
     method: "POST",
   });
   const columnsToAdd = await response.json();
@@ -29,7 +25,7 @@ export async function createNewColumn(
 }
 
 export async function deleteColumnFromDB(id: IDType) {
-  const response = await fetch(`/api/deletecolumn?id=${id}`, {
+  const response = await fetch(`/api/column/deletecolumn?id=${id}`, {
     method: "GET",
   });
 
