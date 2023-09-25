@@ -49,7 +49,7 @@ export default function KanbanBoard() {
     setTasks(newTasks);
   }
 
-  function updateColumn(id: IDType, title: string) {
+  async function updateColumn(id: IDType, title: string) {
     const newColumns = columns.map((col) => {
       if (col.id !== id) return col;
       return { ...col, title };

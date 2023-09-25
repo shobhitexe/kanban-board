@@ -5,6 +5,7 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
 import TaskCard from "./TaskCard";
+import { updateColumnName } from "@/lib/columnoperations";
 
 type ColumnContainerProps = {
   column: ColumnsType;
@@ -68,13 +69,15 @@ export default function ColumnContainer({
       <div
         {...attributes}
         {...listeners}
-        onClick={() => setEditMode(true)}
-        className="flex gap-2 items-center w-full justify-center bg-mainBackgroundColor"
+        className="flex gap-2 items-center w-full justify-between cursor-grab px-5 bg-mainBackgroundColor"
       >
         <div className="flex justify-center px-2 py-1 text-sm rounded-full">
-          0
+          {column.order}
         </div>
-        <div className=" text-sm cursor-grab rounded-md rounded-b-none p-3 font-bold">
+        <div
+          onClick={() => setEditMode(true)}
+          className=" text-sm rounded-md rounded-b-none p-3 font-bold cursor-pointer"
+        >
           {!editMode && column.title}
           {editMode && (
             <input
@@ -82,10 +85,14 @@ export default function ColumnContainer({
               className="bg-black focus:border-rose-500 rounded outline-none px-2"
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
-              onBlur={() => setEditMode(false)}
+              onBlur={() => {
+                setEditMode(false);
+                updateColumnName(column.id, column.title);
+              }}
               onKeyDown={(e) => {
                 if (e.key !== "Enter") return;
                 setEditMode(false);
+                updateColumnName(column.id, column.title);
               }}
             ></input>
           )}

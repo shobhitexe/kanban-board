@@ -18,6 +18,9 @@ export async function createNewColumn(
 ) {
   const response = await fetch("/api/column/createcolumn", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
   const columnsToAdd = await response.json();
 
@@ -27,6 +30,18 @@ export async function createNewColumn(
 export async function deleteColumnFromDB(id: IDType) {
   const response = await fetch(`/api/column/deletecolumn?id=${id}`, {
     method: "GET",
+  });
+
+  return response.ok;
+}
+
+export async function updateColumnName(id: IDType, title: string) {
+  const response = await fetch("/api/column/updatecolumnname", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id, title: title }),
   });
 
   return response.ok;

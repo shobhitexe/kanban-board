@@ -7,11 +7,13 @@ dbConnect();
 
 export async function POST(req: Request) {
   try {
-    const count = await Columns.count();
-    const title = `Column ${count + 1}`;
+    const latestRecord = await Columns.find().sort({ _id: -1 }).limit(1);
+    const order = latestRecord[0].order + 1;
+    const title = `Column ${order}`;
 
     const columnToAdd = {
       title,
+      order,
     };
 
     const newColumn = new Columns(columnToAdd);
@@ -21,6 +23,7 @@ export async function POST(req: Request) {
     const newAddedColumn: ColumnsType = {
       id: newColumn._id,
       title,
+      order,
     };
 
     return NextResponse.json(newAddedColumn, { status: 200 });
