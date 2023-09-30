@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import dbConnect from "../../../../../config/db";
 import { Columns } from "../../../../../models/columns";
 import { ColumnsType } from "@/types";
-
-dbConnect();
 
 export async function POST(req: Request) {
   try {

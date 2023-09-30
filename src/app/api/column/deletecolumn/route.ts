@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
-import dbConnect from "../../../../../config/db";
 import { Columns } from "../../../../../models/columns";
-
-dbConnect();
 
 export async function GET(req: Request) {
   try {
