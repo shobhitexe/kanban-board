@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Columns } from "../../../../../models/columns";
 import { ColumnsType } from "@/types";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const latestRecord = await Columns.find().sort({ _id: -1 }).limit(1);
     const order = latestRecord[0].order + 1;
