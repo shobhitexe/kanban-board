@@ -3,6 +3,7 @@ import { IDType, TaskType } from "@/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
+import { updateTaskContent } from "@/lib/taskoperations";
 
 type TaskCardProps = {
   task: TaskType;
@@ -66,10 +67,14 @@ export default function TaskCard({
           value={task.content}
           autoFocus
           placeholder="Task Content Here"
-          onBlur={toggleEditMode}
+          onBlur={() => {
+            toggleEditMode;
+            updateTaskContent(task.id, task.content);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && e.shiftKey) {
               toggleEditMode();
+              updateTaskContent(task.id, task.content);
             }
           }}
           onChange={(e) => updateTask(task.id, e.target.value)}

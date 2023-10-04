@@ -5,7 +5,12 @@ import { ColumnsType } from "@/types";
 export async function POST() {
   try {
     const latestRecord = await Columns.find().sort({ _id: -1 }).limit(1);
-    const order = latestRecord[0].order + 1;
+
+    let order = 1;
+    if (latestRecord.length !== 0) {
+      order = latestRecord[0].order + 1;
+    }
+
     const title = `Column ${order}`;
 
     const columnToAdd = {

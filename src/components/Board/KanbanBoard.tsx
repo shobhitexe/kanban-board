@@ -14,13 +14,13 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
-import { generateID } from "@/utils/generateID";
 import {
   createNewColumn,
   deleteColumnFromDB,
   fetchColumns,
 } from "@/lib/columnoperations";
 import { onDragStart, onDragEnd, onDragOver } from "@/lib/dragEvents";
+import { createTask, deleteTask, fetchTasks } from "@/lib/taskoperations";
 
 export default function KanbanBoard() {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -37,6 +37,7 @@ export default function KanbanBoard() {
 
   useEffect(() => {
     fetchColumns(setColumns);
+    fetchTasks(setTasks);
   }, []);
 
   async function deleteColumn(id: IDType) {
@@ -65,21 +66,6 @@ export default function KanbanBoard() {
       },
     })
   );
-
-  function createTask(columnId: IDType) {
-    const newTask: TaskType = {
-      id: generateID(),
-      columnId: columnId,
-      content: `Task ${tasks.length + 1}`,
-    };
-
-    setTasks([...tasks, newTask]);
-  }
-
-  function deleteTask(id: IDType) {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
-  }
 
   function updateTask(id: IDType, content: string) {
     const newTasks = tasks.map((task) => {
@@ -111,9 +97,11 @@ export default function KanbanBoard() {
                   column={column}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
-                  createTask={createTask}
+                  createTask={(columnId) =>
+                    createTask(tasks, columnId, setTasks)
+                  }
                   tasks={tasks.filter((task) => task.columnId === column.id)}
-                  deleteTask={deleteTask}
+                  deleteTask={(id) => deleteTask(id, setTasks, tasks)}
                   updateTask={updateTask}
                 />
               ))}
@@ -135,18 +123,20 @@ export default function KanbanBoard() {
                     column={activeColumn}
                     deleteColumn={deleteColumn}
                     updateColumn={updateColumn}
-                    createTask={createTask}
+                    createTask={(columnId) =>
+                      createTask(tasks, columnId, setTasks)
+                    }
                     tasks={tasks.filter(
                       (task) => task.columnId === activeColumn.id
                     )}
-                    deleteTask={deleteTask}
+                    deleteTask={(id) => deleteTask(id, setTasks, tasks)}
                     updateTask={updateTask}
                   />
                 )}
                 {activeTask && (
                   <TaskCard
                     task={activeTask}
-                    deleteTask={deleteTask}
+                    deleteTask={(id) => deleteTask(id, setTasks, tasks)}
                     updateTask={updateTask}
                   />
                 )}

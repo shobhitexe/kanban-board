@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ColumnsType } from "@/types";
-import { OrderArray } from "../../../../../models/order";
+import { OrderArray } from "../../../../../models/columnOrder";
 
 export async function POST(req: Request) {
   try {
@@ -14,14 +14,16 @@ export async function POST(req: Request) {
 
     const updatedMongoArr = await OrderArray.findOneAndUpdate(
       {},
-      { orderArray: updatedOrderArr },
+      { columnOrderArray: updatedOrderArr },
       {
         upsert: true,
         new: true,
       }
     );
 
-    return NextResponse.json({ orderArray: updatedMongoArr.orderArray });
+    return NextResponse.json({
+      columnOrderArray: updatedMongoArr.columnOrderArray,
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.error();

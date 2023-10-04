@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Columns } from "../../../../../models/columns";
 import dbConnect from "../../../../../config/db";
 import { ColumnsType } from "@/types";
-import { OrderArray } from "../../../../../models/order";
+import { OrderArray } from "../../../../../models/columnOrder";
 
 export async function GET() {
   try {
@@ -10,7 +10,7 @@ export async function GET() {
     const allColumns = await Columns.find({});
     const orderArrData = await OrderArray.find({}).limit(1);
 
-    const orderArray: number[] = orderArrData[0].orderArray;
+    const orderArray: number[] = orderArrData[0].columnOrderArray;
 
     const updatedData: ColumnsType[] = allColumns.map((item) => {
       const { _id, title, order } = item;
